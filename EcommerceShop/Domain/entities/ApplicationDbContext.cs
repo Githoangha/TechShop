@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Domain.Entities
 {
-    class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }

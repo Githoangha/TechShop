@@ -1,4 +1,4 @@
-﻿using EcommerceShop.Models;
+﻿using ShopOnline.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
