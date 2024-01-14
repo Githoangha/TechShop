@@ -30,7 +30,7 @@ namespace ShopOnline
             var assembly = typeof(ApplicationDbContext).Assembly.GetName().Name;
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(assembly)));
-            DependencyInjection.AddService(services);
+            //DependencyInjection.AddService(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
