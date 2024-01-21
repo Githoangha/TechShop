@@ -1,4 +1,6 @@
 using Application;
+using Application.Products;
+using Domain.Abstractrions;
 using Domain.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +33,9 @@ namespace ShopOnline
             var assembly = typeof(ApplicationDbContext).Assembly.GetName().Name;
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(assembly)));
-            //DependencyInjection.AddService(services);
+            services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+            services.AddScoped(typeof(IRepository1<,>), typeof(EfRepository1<,>));
+            DependencyInjection.AddService(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,7 +62,7 @@ namespace ShopOnline
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Product}/{action=Index}/{id?}");
             });
         }
     }

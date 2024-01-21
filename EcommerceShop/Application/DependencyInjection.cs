@@ -1,4 +1,5 @@
-﻿using Application.Products;
+﻿using Application.Categories;
+using Application.Products;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace Application
     {
         public static void AddService(this IServiceCollection services)
         {
+            services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IProductService, ProductService>();
         }
     }
