@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EcommerceShop.Controllers
+namespace ShopOnline.Controllers
 {
     public class ProductController : Controller
     {

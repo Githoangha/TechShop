@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Domain.Abstractrions;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Application.Products
 {
     public interface IProductService
     {
         GenericData<ProductViewModel> GetProducts(ProductPage model);
-    }
+		Task<ProductDetailViewModel> GetProductDetail(Guid productId);
+	}
     public class ProductService : IProductService
     {
 		private readonly IRepository1<Product, Guid> _productRepository;
@@ -108,6 +112,63 @@ namespace Application.Products
 			//gán danh sách product vào data
 			data.Data = productViewModels;
 			return data;
+		}
+
+		public async Task<ProductDetailViewModel> GetProductDetail(Guid productId)
+		{
+			var product = await _productRepository.FindById(productId);
+			if (product == null)
+			{
+				return null;
+			}
+			var result = new ProductDetailViewModel();
+			result.Id = product.Id;
+			result.Name = product.Name;
+			result.Description = product.Description;
+			result.Quantity = product.Quantity;
+			result.Price = product.Price;
+			result.DiscountPrice = product.DiscountPrice;
+			result.CategoryId = product.CategoryId;
+			result.CategoryName = await GetCategory(product.CategoryId);
+			result.Reviews = await GetReviewModels(productId);
+			result.Images = await GetImageModels(productId);
+			return result;
+		}
+
+		private async Task<string> GetCategory(Guid categoryId)
+		{
+			var category = await _categoryRepository.FindById(categoryId);
+			return category != null ? category.Name : string.Empty;
+		}
+		private async Task<List<ReviewModel>> GetReviewModels(Guid productId)
+		{
+			var result = await _reviewRepository.FindAllAsync()
+				.Where(s => s.ProductId == productId)
+				.Select(x => new ReviewModel
+				{
+					Id = x.Id,
+					Content = x.Content,
+					ReviewerName = x.ReviewerName,
+					Email = x.Email,
+					Rating = x.Rating
+
+				}).ToListAsync();
+		
+			return result;
+		}
+
+		private async Task<List<ImageViewModel>> GetImageModels(Guid productId)
+		{
+
+			var result = await _imageRepository.FindAllAsync()
+				.Where(s => s.ProductId == productId)
+				.Select(x => new ImageViewModel
+				{
+					Id = x.Id,
+					ImageLink = x.ImageLink,
+					Alt = x.Alt,
+				}).ToListAsync();
+			return result.ToList();
 		}
 	}
 }

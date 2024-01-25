@@ -16,11 +16,11 @@ namespace Persistence
         {
             _context = context;
         }
-        public List<TEntity> FindAll()
+        public IQueryable<TEntity> FindAll()
         {
             //var result =  _context.Set<TEntity>().ToList();
             //return result;
-            return _context.Set<TEntity>().ToList();
+            return _context.Set<TEntity>().AsQueryable();
         }
 
         public IQueryable<TEntity> FindAllAsync()

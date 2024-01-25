@@ -35,7 +35,14 @@ namespace ShopOnline
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(assembly)));
             services.AddScoped<IUnitOfWork, EfUnitOfWork>();
             services.AddScoped(typeof(IRepository1<,>), typeof(EfRepository1<,>));
-            DependencyInjection.AddService(services);
+
+            services.AddService();
+            //DependencyInjection.AddService(services);
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromHours(1);
+                options.Cookie.HttpOnly = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +60,9 @@ namespace ShopOnline
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            // add session middleware
+            app.UseSession();
 
             app.UseRouting();
 
